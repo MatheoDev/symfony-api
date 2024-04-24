@@ -6,6 +6,7 @@ use App\Enums\TypeTrain;
 use App\Model\Escale;
 use App\Model\Trajet;
 
+
 class TrajetInMemoryTrajetRepository implements TrajetRepositoryInterface
 {
     public function findAll(): array

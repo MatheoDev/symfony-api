@@ -2,7 +2,7 @@
 
 namespace App\Controller\Trajets;
 
-use App\Repository\TrajetRepository;
+use App\Repository\TrajetRepositoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,7 +14,7 @@ class Liste
 {
     public function __construct(
         private readonly SerializerInterface      $serializer,
-        private readonly TrajetRepository $trajetRepository,
+        private readonly TrajetRepositoryInterface $trajetRepository,
     ) {}
 
     public function __invoke(): JsonResponse
