@@ -5,9 +5,12 @@ namespace App\Repository;
 use App\Entity\Trajet;
 use App\Enums\TypeTrain;
 use App\Model\Escale as EscaleModel;
+use App\Model\NullTrajet;
 use App\Model\Trajet as TrajetModel;
+use App\Model\TrajetInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends ServiceEntityRepository<Trajet>
@@ -42,10 +45,34 @@ class TrajetRepository extends ServiceEntityRepository implements TrajetReposito
             }, $trajet->getEscales()->toArray());
             // Create Trajet
             $trajetModel = new TrajetModel(TypeTrain::from($trajet->getType()), ...$escalesModel);
+            $trajetModel->setId($trajet->getId());
             $trajetsModel[] = $trajetModel;
         }
 
         return $trajetsModel;
+    }
+
+    public function findOneById(Uuid $id): TrajetInterface
+    {
+        $trajet = $this->createQueryBuilder('t')
+            ->select('t')
+            ->where('t.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (null === $trajet) {
+            return new NullTrajet();
+        }
+
+        // Create escales to model
+        $escalesModel = array_map(function ($escale) {
+            return new EscaleModel($escale->getGare(), $escale->getVoie(), $escale->getHoraire());
+        }, $trajet->getEscales()->toArray());
+        // Create Trajet
+        $trajetModel = new TrajetModel(TypeTrain::from($trajet->getType()), ...$escalesModel);
+        $trajetModel->setId($trajet->getId());
+        return $trajetModel;
     }
 
 }

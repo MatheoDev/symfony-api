@@ -3,11 +3,11 @@
 namespace App\Model;
 
 use App\Enums\TypeTrain;
-use Symfony\Component\Uid\UuidV4;
+use Symfony\Component\Uid\Uuid;
 
-final class Trajet
+final class Trajet implements TrajetInterface
 {
-    public readonly UuidV4 $id;
+    public Uuid $id;
     /**
      * @var iterable<Escale>
      */
@@ -18,9 +18,14 @@ final class Trajet
     {
         assert(count($escales) > 1);
 
-        $this->id = UuidV4::v4();
+        $this->id = Uuid::v4();
         $this->escales = $escales;
         $this->train = $train;
+    }
+
+    public function setId(Uuid $id): void
+    {
+        $this->id = $id;
     }
 
     public function getDepart(): Escale
