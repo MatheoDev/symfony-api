@@ -12,9 +12,8 @@ class BasePrice implements ModifierInterface
         $price->value = 500;
     }
 
-    public function getPriority(): int
+    public static function getDefaultPriority(): int
     {
         return 999;
     }
-
 }
