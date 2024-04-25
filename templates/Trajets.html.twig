@@ -12,7 +12,8 @@
             <dt>Nombre d'arrêts</dt>
             <dd>{{ trajet.arrets|length }}</dd>
 
-            <a href="{{ path('trajets_detail', {id: trajet.id}) }}">Voir le trajet</a>
+            <a href="{{ path('trajet_detail', {id: trajet.id}) }}">Voir le trajet</a>
+            <a href="{{ path('trajet_tarif', {id: trajet.id}) }}">Voir le tarif</a>
         </dl>
     {% endfor %}
 {% endblock %}

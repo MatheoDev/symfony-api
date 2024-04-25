@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Uid\Uuid;
 
 #[AsController]
-#[Route(path: '/trajets/{id}', name: 'trajets_detail', methods: ['GET'])]
+#[Route(path: '/trajets/{id}', name: 'trajet_detail', methods: ['GET'])]
 class Detail
 {
     public function __construct(

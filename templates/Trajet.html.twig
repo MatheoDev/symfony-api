@@ -3,14 +3,20 @@
 {% block body %}
     <dl>
         <dt>Départ</dt>
-        <dd>{{ Trajet.depart.gare }}</dd>
+        <dd>{{ Trajet.depart.gare }} (voie {{ Trajet.depart.voie }}) : {{ Trajet.depart.horaire|date('H:i') }}</dd>
 
         <dt>Arrivée</dt>
-        <dd>{{ Trajet.destination.gare }}</dd>
+        <dd>{{ Trajet.destination.gare }} (voie {{ Trajet.destination.voie }}) : {{ Trajet.destination.horaire|date('H:i') }}</dd>
 
-        <dt>Nombre d'arrêts</dt>
-        <dd>{{ Trajet.arrets|length }}</dd>
+        <dt>Arrêts</dt>
+        <dd>
+            <ul>
+                {% for arret in Trajet.arrets %}
+                    <li>{{ arret.gare }} (voie {{ arret.voie }}) : {{ arret.horaire|date('H:i') }}</li>
+                {% endfor %}
+            </ul>
+        </dd>
 
-        <a href="{{ path('trajet_tarif', {id: Trajet.id}) }}">Voir le tarif</a>
+        <a href="{{ path('trajets_liste') }}">Retour</a>
     </dl>
 {% endblock %}
