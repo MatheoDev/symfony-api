@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <dl>
+        <dt>Départ</dt>
+        <dd>{{ Trajet.depart.gare }}</dd>
+
+        <dt>Arrivée</dt>
+        <dd>{{ Trajet.destination.gare }}</dd>
+
+        <dt>Nombre d'arrêts</dt>
+        <dd>{{ Trajet.arrets|length }}</dd>
+
+        <a href="{{ path('trajet_tarif', {id: Trajet.id}) }}">Voir le tarif</a>
+    </dl>
+{% endblock %}
