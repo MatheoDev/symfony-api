@@ -3,12 +3,9 @@
 namespace App\Controller\Trajets;
 
 use App\Model\NullTrajet;
-use App\PriceCalculator\Modifers\BasePrice;
-use App\PriceCalculator\Modifers\EscaleQuantity;
-use App\PriceCalculator\Modifers\TypeOfTrain;
+use App\PriceCalculator\Price;
 use App\PriceCalculator\PriceCalculator;
 use App\Repository\TrajetRepositoryInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,7 +15,7 @@ use Symfony\Component\Uid\Uuid;
 #[Route(path: '/trajets/{id}/tarif', name: 'trajet_tarif', methods: ['GET'])]
 class Tarif
 {
-    public function __invoke(PriceCalculator $priceCalculator, TrajetRepositoryInterface $trajetRepository, string $id): JsonResponse
+    public function __invoke(PriceCalculator $priceCalculator, TrajetRepositoryInterface $trajetRepository, string $id): Price
     {
         $trajet = $trajetRepository->findOneById(Uuid::fromRfc4122($id));
 
@@ -26,6 +23,6 @@ class Tarif
             throw new NotFoundHttpException();
         }
 
-        return new JsonResponse(['tarif' => $priceCalculator->calculatePrice($trajet)]);
+        return $priceCalculator->calculatePrice($trajet);
     }
 }

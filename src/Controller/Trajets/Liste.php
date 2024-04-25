@@ -13,16 +13,11 @@ use Symfony\Component\Serializer\SerializerInterface;
 class Liste
 {
     public function __construct(
-        private readonly SerializerInterface      $serializer,
         private readonly TrajetRepositoryInterface $trajetRepository,
     ) {}
 
-    public function __invoke(): JsonResponse
+    public function __invoke()
     {
-        $trajets = $this->trajetRepository->findAll();
-
-        $serialize = $this->serializer->serialize($trajets, 'json');
-
-        return new JsonResponse($serialize, 200, [], true);
+        return $this->trajetRepository->findAll();
     }
 }
