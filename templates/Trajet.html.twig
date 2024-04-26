@@ -2,6 +2,15 @@
 
 {% block body %}
     <dl>
+        <dt>Formule</dt>
+        <dd>
+            <select id="change-formule" onchange="handleChangeFormule()">
+                <option value="">Choisir une formule</option>
+                <option value="big_voyageur">Gigantesque voyageur</option>
+                <option value="student">El estudiante</option>
+            </select>
+        </dd>
+
         <dt>Départ</dt>
         <dd>{{ Trajet.depart.gare }} (voie {{ Trajet.depart.voie }}) : {{ Trajet.depart.horaire|date('H:i') }}</dd>
 
@@ -15,7 +24,8 @@
                 'App\\Infrastructure\\Controller\\Trajets\\Tarif',
                 {
                     'id': Trajet.id,
-                    'arretId': app.request.query.get('arretId')
+                    'arretId': app.request.query.get('arretId'),
+                    'formule': app.request.query.get('formule')
                 }
             )) }}
         </dd>
@@ -43,4 +53,25 @@
 
         <a href="{{ path('trajets_liste') }}">Retour</a>
     </dl>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        const handleChangeFormule = () => {
+            const formule = document.getElementById('change-formule').value
+            const arretId = '{{ app.request.query.get('arretId') }}'
+
+            const url = '{{ path('trajet_detail', {
+                'id': app.request.attributes.get('id'),
+            }) }}'
+
+            const queryParams = {}
+            if (formule) queryParams.formule = formule
+            if (arretId) queryParams.arretId = arretId
+
+            const params = new URLSearchParams(queryParams)
+
+            window.location.href = `${url}?${params}`
+        };
+    </script>
 {% endblock %}

@@ -19,7 +19,8 @@ class Tarif
         PriceCalculator           $priceCalculator,
         TrajetRepositoryInterface $trajetRepository,
         string                    $id,
-        ?string                   $arretId
+        ?string                   $arretId,
+        ?string                   $formule
     ): Price
     {
         $uuidArretId = $arretId !== null ? Uuid::fromRfc4122($arretId) : null;
@@ -29,6 +30,6 @@ class Tarif
             throw new NotFoundHttpException();
         }
 
-        return $priceCalculator->calculatePrice($trajet);
+        return $priceCalculator->calculatePrice($trajet, $formule);
     }
 }
