@@ -6,13 +6,37 @@
         <dd>{{ Trajet.depart.gare }} (voie {{ Trajet.depart.voie }}) : {{ Trajet.depart.horaire|date('H:i') }}</dd>
 
         <dt>Arrivée</dt>
-        <dd>{{ Trajet.destination.gare }} (voie {{ Trajet.destination.voie }}) : {{ Trajet.destination.horaire|date('H:i') }}</dd>
+        <dd>{{ Trajet.destination.gare }} (voie {{ Trajet.destination.voie }})
+            : {{ Trajet.destination.horaire|date('H:i') }}</dd>
+
+        <dt>Tarif</dt>
+        <dd>
+            {{ render(controller(
+                'App\\Infrastructure\\Controller\\Trajets\\Tarif',
+                {
+                    'id': Trajet.id,
+                    'arretId': app.request.query.get('arretId')
+                }
+            )) }}
+        </dd>
 
         <dt>Arrêts</dt>
         <dd>
             <ul>
                 {% for arret in Trajet.arrets %}
-                    <li>{{ arret.gare }} (voie {{ arret.voie }}) : {{ arret.horaire|date('H:i') }}</li>
+                    <li>
+                        {% if app.request.query.get('arretId') == arret.id %}
+                        <strong>
+                        {% endif %}
+                            {{ arret.gare }} (voie {{ arret.voie }}) : {{ arret.horaire|date('H:i') }}
+                            <a href="{{ path('trajet_detail', {
+                                'id': Trajet.id,
+                                'arretId': arret.id
+                            }) }}">Sélectionner le trajet</a>
+                        {% if app.request.query.get('arretId') == arret.id %}
+                        </strong>
+                        {% endif %}
+                    </li>
                 {% endfor %}
             </ul>
         </dd>

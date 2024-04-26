@@ -14,11 +14,11 @@ final class Trajet implements TrajetInterface
     private iterable $escales;
     public readonly TypeTrain $train;
 
-    public function __construct(TypeTrain $train, Escale ...$escales)
+    public function __construct(Uuid $id, TypeTrain $train, Escale ...$escales)
     {
         assert(count($escales) > 1);
 
-        $this->id = Uuid::v4();
+        $this->id = $id;
         $this->escales = $escales;
         $this->train = $train;
     }

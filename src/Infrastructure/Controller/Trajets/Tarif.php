@@ -15,9 +15,15 @@ use Symfony\Component\Uid\Uuid;
 #[Route(path: '/trajets/{id}/tarif', name: 'trajet_tarif', methods: ['GET'])]
 class Tarif
 {
-    public function __invoke(PriceCalculator $priceCalculator, TrajetRepositoryInterface $trajetRepository, string $id): Price
+    public function __invoke(
+        PriceCalculator           $priceCalculator,
+        TrajetRepositoryInterface $trajetRepository,
+        string                    $id,
+        ?string                   $arretId
+    ): Price
     {
-        $trajet = $trajetRepository->findOneById(Uuid::fromRfc4122($id));
+        $uuidArretId = $arretId !== null ? Uuid::fromRfc4122($arretId) : null;
+        $trajet = $trajetRepository->findOneById(Uuid::fromRfc4122($id), $uuidArretId);
 
         if ($trajet instanceof NullTrajet) {
             throw new NotFoundHttpException();

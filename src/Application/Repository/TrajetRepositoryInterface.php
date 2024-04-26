@@ -9,5 +9,5 @@ interface TrajetRepositoryInterface
 {
     public function findAll(): array;
 
-    public function findOneById(Uuid $id): TrajetInterface;
+    public function findOneById(Uuid $id, ?Uuid $arretId = null): TrajetInterface;
 }

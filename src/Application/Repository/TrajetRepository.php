@@ -2,6 +2,7 @@
 
 namespace App\Application\Repository;
 
+use App\Application\Entity\Escale;
 use App\Application\Entity\Trajet;
 use App\Domain\Enums\TypeTrain;
 use App\Domain\Model\Escale as EscaleModel;
@@ -41,18 +42,17 @@ class TrajetRepository extends ServiceEntityRepository implements TrajetReposito
         foreach ($trajets as $trajet) {
             // Create escales to model
             $escalesModel = array_map(function ($escale) {
-                return new EscaleModel($escale->getGare(), $escale->getVoie(), $escale->getHoraire());
+                return new EscaleModel($escale->getId(), $escale->getGare(), $escale->getVoie(), $escale->getHoraire());
             }, $trajet->getEscales()->toArray());
             // Create Trajet
-            $trajetModel = new TrajetModel(TypeTrain::from($trajet->getType()), ...$escalesModel);
-            $trajetModel->setId($trajet->getId());
+            $trajetModel = new TrajetModel($trajet->getId(), TypeTrain::from($trajet->getType()), ...$escalesModel);
             $trajetsModel[] = $trajetModel;
         }
 
         return $trajetsModel;
     }
 
-    public function findOneById(Uuid $id): TrajetInterface
+    public function findOneById(Uuid $id, ?Uuid $arretId = null): TrajetInterface
     {
         $trajet = $this->createQueryBuilder('t')
             ->select('t')
@@ -66,12 +66,18 @@ class TrajetRepository extends ServiceEntityRepository implements TrajetReposito
         }
 
         // Create escales to model
-        $escalesModel = array_map(function ($escale) {
-            return new EscaleModel($escale->getGare(), $escale->getVoie(), $escale->getHoraire());
-        }, $trajet->getEscales()->toArray());
+
+        $escalesModel = [];
+        /** @var Escale $escale */
+        foreach ($trajet->getEscales() as $escale) {
+            $escalesModel[] = new EscaleModel($escale->getId(), $escale->getGare(), $escale->getVoie(), $escale->getHoraire());
+            if ($escale->getId()->equals($arretId)) {
+                break;
+            }
+        }
+
         // Create Trajet
-        $trajetModel = new TrajetModel(TypeTrain::from($trajet->getType()), ...$escalesModel);
-        $trajetModel->setId($trajet->getId());
+        $trajetModel = new TrajetModel($trajet->getId(), TypeTrain::from($trajet->getType()), ...$escalesModel);
         return $trajetModel;
     }
 
